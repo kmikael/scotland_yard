@@ -6,10 +6,16 @@ require './board.rb'
 class TestBoard < Test::Unit::TestCase
 
 	def setup
+		
+		# Create a new board with 8 stations and connections from a test board
+		
 		@board = Board.new(8, 'a_board.csv')
+		
 	end
 
 	def test_new_board
+		
+		# Test if new boards have correct number of stations and connections
 		
 		assert_equal(9, @board.stations.length)
 		assert_equal(12, @board.connections.length)
@@ -17,6 +23,8 @@ class TestBoard < Test::Unit::TestCase
 	end
 		
 	def test_stations_of_board
+		
+		# Test if the stations of the board have correct values
 		
 		@board.stations.shift
 		
@@ -32,9 +40,13 @@ class TestBoard < Test::Unit::TestCase
 	
 	def test_stations_connected_to
 		
+		# Test if the connections of board have correct values
+		
 		assert_equal(:underground, @board.connections[11].kind)
 		assert_equal(@board.stations[4], @board.connections[11].station_a)
 		assert_equal(@board.stations[6], @board.connections[11].station_b)
+		
+		# Test if one can correctly find which other stations a station is connected to
 		
 		assert_equal([@board.stations[1], @board.stations[6]], @board.stations_connected_to(4))
 		assert_equal([@board.stations[6], @board.stations[7]], @board.stations_connected_to(8))

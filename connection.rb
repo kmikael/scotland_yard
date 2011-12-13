@@ -1,5 +1,7 @@
 
-require './station.rb'
+require './station'
+
+# A connection is a 'way to go' from one station to another with a particular ticket
 
 class Connection
 

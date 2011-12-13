@@ -1,11 +1,13 @@
 
 require 'test/unit'
 
-require './connection.rb'
+require './connection'
 
 class TestConnections < Test::Unit::TestCase
 	
 	def setup
+		
+		# Create 3 stations and 3 connections and put them into arrays
 		
 		station_1 = Station.new(1)
 		station_2 = Station.new(2)
@@ -21,6 +23,8 @@ class TestConnections < Test::Unit::TestCase
 	
 	def test_new_station
 		
+		# Test if new stations have correct values
+		
 		@stations.each do |station|
 			assert_equal(-1, station.occupied_by)
 		end
@@ -33,16 +37,18 @@ class TestConnections < Test::Unit::TestCase
 	
 	def test_new_connection
 		
-			assert_equal(:taxi, @connections[0].kind)
-			assert_equal(:underground, @connections[1].kind)
-			assert_equal(:bus, @connections[2].kind)
+		# Test if new connections have correct values
+		
+		assert_equal(:taxi, @connections[0].kind)
+		assert_equal(:underground, @connections[1].kind)
+		assert_equal(:bus, @connections[2].kind)
 			
-			assert_equal(@stations[0], @connections[0].station_a)
-			assert_equal(@stations[1], @connections[0].station_b)
-			assert_equal(@stations[1], @connections[1].station_a)
-			assert_equal(@stations[2], @connections[1].station_b, )
-			assert_equal(@stations[2], @connections[2].station_a)
-			assert_equal(@stations[0], @connections[2].station_b)
+		assert_equal(@stations[0], @connections[0].station_a)
+		assert_equal(@stations[1], @connections[0].station_b)
+		assert_equal(@stations[1], @connections[1].station_a)
+		assert_equal(@stations[2], @connections[1].station_b, )
+		assert_equal(@stations[2], @connections[2].station_a)
+		assert_equal(@stations[0], @connections[2].station_b)
 		
 	end
 	

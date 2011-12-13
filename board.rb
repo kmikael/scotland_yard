@@ -3,9 +3,13 @@ require 'csv'
 
 require './connection.rb'
 
+# The class Board describes the game board with all the stations and connections
+
 class Board
 	
 	attr_accessor :stations, :connections
+	
+	# Initializations happens with a number of stations and a simple csv file that has all of the connections
 	
 	def initialize(number_of_stations, csv_file_name)
 		@stations = [nil]
@@ -17,6 +21,9 @@ class Board
 			@connections << Connection.new(stations[row['station_a'].to_i], stations[row['station_b'].to_i], row['kind'].to_sym)
 		end
 	end
+	
+	# This method tells us all the stations one can go to from a particular station
+	# It returns an array of those stations
 	
 	def stations_connected_to(station_number)
 	
