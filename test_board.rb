@@ -62,6 +62,10 @@ class TestBoard < Test::Unit::TestCase
 		assert_equal([@board.connections[10]], @board.connections_between(3, 7))
 		assert_equal([@board.connections[9]], @board.connections_between(1, 4))
 		assert_equal([], @board.connections_between(1, 8))
+		assert_equal([@board.connections[4]], @board.connections_between(3, 6))
+		assert_equal([@board.connections[4]], @board.connections_between(6, 3))
+		assert_equal([@board.connections[2]], @board.connections_between(7, 1))
+		assert_equal([@board.connections[9]], @board.connections_between(4, 1))
 		
 	end
 
