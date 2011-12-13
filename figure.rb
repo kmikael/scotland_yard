@@ -9,14 +9,18 @@ class Figure
 	attr_accessor :id, :position, :tickets
 	
 	def initialize(id, position)
+		
 		@id = id
+		
 		@position = position
 		position.occupied_by = id
+		
 		if id > 0
 			@tickets = {taxi: 10, bus: 8, underground: 4}
 		else
 			@tickets = {taxi: 99, bus: 99, underground: 99, black: 4}
 		end
+		
 	end
 	
 	# Figures can only move along a connection if they have an appropriate ticket

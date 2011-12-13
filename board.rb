@@ -40,5 +40,20 @@ class Board
 		
 	end
 	
+	def connections_between(station_a_number, station_b_number)
+		
+		connections = []
+		self.connections.each do |connection|
+			if (connection.station_a.number == station_a_number) or (connection.station_a.number == station_b_number)
+				if (connection.station_b.number == station_b_number) or (connection.station_b.number == station_b_number)
+					connections << connection
+				end
+			end
+		end
+		
+		return connections
+		
+	end
+	
 end
 
