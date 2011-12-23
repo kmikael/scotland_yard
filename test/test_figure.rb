@@ -1,8 +1,8 @@
 
 require 'test/unit'
 
-require './figure'
-require './board'
+require 'figure'
+require 'board'
 
 class TestFigures < Test::Unit::TestCase
 
@@ -10,9 +10,9 @@ class TestFigures < Test::Unit::TestCase
 		
 		# Create a board a mr_x and an agent
 		
-		@board = Board.new(8, 'a_test_board.txt')
+		@board = Board.new(8, '/Users/mkonutgan/Code/Ruby/scotland_yard/test/a_test_board.txt')
 		@mr_x = Figure.new(0, @board.stations[1])
-		@agent = Figure.new(1, @board.stations[6]) 
+		@agent = Figure.new(1, @board.stations[6])
 		
 	end
 	

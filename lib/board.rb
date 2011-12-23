@@ -1,7 +1,7 @@
 
 require 'csv'
 
-require './connection.rb'
+require 'connection.rb'
 
 # The class Board describes the game board with all the stations and connections
 

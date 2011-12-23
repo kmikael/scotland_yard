@@ -1,5 +1,5 @@
 
-require './connection'
+require 'connection'
 
 # A Figure is either Mr. X (id = 0) or an Agent (id > 0)
 # A figure holds on to his tickets and his current position

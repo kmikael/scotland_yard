@@ -1,7 +1,7 @@
 
 require 'test/unit'
 
-require './board.rb'
+require 'board.rb'
 
 class TestBoard < Test::Unit::TestCase
 
@@ -9,7 +9,7 @@ class TestBoard < Test::Unit::TestCase
 		
 		# Create a new board with 8 stations and connections from a test board
 		
-		@board = Board.new(8, 'a_test_board.txt')
+		@board = Board.new(8, '/Users/mkonutgan/Code/Ruby/scotland_yard/test/a_test_board.txt')
 		
 	end
 

@@ -1,7 +1,7 @@
 
 require 'test/unit'
 
-require './connection'
+require 'connection'
 
 class TestConnections < Test::Unit::TestCase
 	

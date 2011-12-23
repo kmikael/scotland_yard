@@ -1,6 +1,6 @@
 
-require './board'
-require './figure'
+require 'board'
+require 'figure'
 
 # The class game fully describes 'Scotland Yard'
 # -- The board, Mr. X and the agents
@@ -9,9 +9,9 @@ require './figure'
 
 class Game
  
-	attr_reader :figures, :board
-	attr_accessor :turns_left
-	# private :figures, :board, :turns_left
+	attr_reader :figures, :board, :mrx_log
+	attr_accessor :turns
+	# private :figures, :board, :turns
 	
 	# Initialization creates a board the figures
 	# Then the figures are put on random starting positions
@@ -29,7 +29,9 @@ class Game
 		# 	starting.delete(@figures.last.position.number)
 		# end
 		
-		@turns_left = 24
+		@mrx_log = []
+		
+		@turns = 0
 		
 		# Just for testing
 		@figures = []
@@ -54,12 +56,33 @@ class Game
 			end
 		end
 		
-		if self.turns_left == 0
+		if self.turns == 24
 			return true
 		end
 		
 		return false
 	
+	end
+	
+	def position_of_mr_x
+		
+		if self.turns % 5 == 3
+			return self.figures[0].position.number
+		end
+		
+		return nil
+		
+	end
+	
+	def position_of_agents
+		
+		positions = []
+		for i in 1..4
+			positions << self.figures[i].position.number
+		end
+		
+		return positions
+		
 	end
 	
 	def move(figure_symbol, to_station_number, with_ticket)
@@ -91,7 +114,8 @@ class Game
 		has_moved = figure.move(connection, black_ticket)
 		
 		if has_moved and figure.id == 0
-			self.turns_left -= 1
+			self.mrx_log << with_ticket
+			self.turns += 1
 		end
 		
 		return has_moved

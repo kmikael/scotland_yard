@@ -1,7 +1,7 @@
 
 require 'test/unit'
 
-require './game'
+require 'game'
 
 class TestGame < Test::Unit::TestCase
 	
@@ -9,7 +9,7 @@ class TestGame < Test::Unit::TestCase
 		
 		# Create new game with a test board and 2 agents
 		
-		@game = Game.new(8, 'a_test_board.txt', 2)
+		@game = Game.new(8, '/Users/mkonutgan/Code/Ruby/scotland_yard/test/a_test_board.txt', 2)
 		
 	end
 	
@@ -23,7 +23,7 @@ class TestGame < Test::Unit::TestCase
 		assert_equal(2, @game.figures[2].id)
 		assert_equal(nil, @game.figures[3])
 		
-		assert_equal(24, @game.turns_left)
+		assert_equal(0, @game.turns)
 		
 		assert_equal(9, @game.board.stations.length)
 		
@@ -44,7 +44,7 @@ class TestGame < Test::Unit::TestCase
 		@game.move(:mr_x, 7, :bus)
 		assert_equal(7, @game.figures[0].position.number)
 		
-		assert_equal(20, @game.turns_left)
+		assert_equal(4, @game.turns)
 		
 		# Test moving the agents arround
 		
@@ -63,10 +63,10 @@ class TestGame < Test::Unit::TestCase
 		
 		# Test if game.over? is true when there aren't any turns left
 		
-		@game.turns_left = 1
-		assert_equal(1, @game.turns_left)
+		@game.turns = 23
+		assert_equal(23, @game.turns)
 		@game.move(:mr_x, 7, :taxi)
-		assert_equal(0, @game.turns_left)
+		assert_equal(24, @game.turns)
 		assert_equal(true, @game.over?)
 		
 	end
