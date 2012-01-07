@@ -1,57 +1,47 @@
 
-require 'csv'
-
-require 'connection.rb'
-
-# The class Board describes the game board with all the stations and connections
+require 'yaml'
 
 class Board
 	
-	attr_accessor :stations, :connections
+	def initialize
+		@board = YAML.load_file('board/board.yml')
+	end
 	
-	# Initializations happens with a number of stations and a simple csv file that has all of the connections
-	
-	def initialize(number_of_stations, csv_file_name)
-		@stations = [nil]
-		for i in 1..number_of_stations
-			stations << Station.new(i)
-		end
-		@connections = []
-		CSV.foreach(csv_file_name, headers:true) do |row|
-			@connections << Connection.new(stations[row['station_a'].to_i], stations[row['station_b'].to_i], row['kind'].to_sym)
+	def can_move_between?(a, b, ticket)
+		if ticket == :taxi
+			@board[a][b] == 1 or @board[a][b] == 3
+		elsif ticket == :bus
+			@board[a][b] == 2 or @board[a][b] == 3 or @board[a][b] == 6
+		elsif ticket == :underground
+			@board[a][b] == 4 or @board[a][b] == 6
+		elsif ticket == :ship
+			@board[a][b] == 10
 		end
 	end
 	
-	# This method tells us all the stations one can go to from a particular station
-	# It returns an array of those stations
-	
-	def stations_connected_to(station_number)
-	
-		stations = []
-		self.connections.each do |connection|
-			if connection.station_a.number == station_number
-				stations << connection.station_b
-			elsif connection.station_b.number == station_number
-				stations << connection.station_a
+	def routes_from(station_number)
+		result = []
+		@board[station_number].each_with_index do |number, index|
+			if index == 0 or index == station_number
+				next
+			end
+			if number == 1
+				result << {station: index, ticket: :taxi}
+			elsif number == 2
+				result << {station: index, ticket: :bus}
+			elsif number == 3
+				result << {station: index, ticket: :taxi}
+				result << {station: index, ticket: :bus}
+			elsif number == 4
+				result << {station: index, ticket: :underground}
+			elsif number == 6
+				result << {station: index, ticket: :bus}
+				result << {station: index, ticket: :underground}
+			elsif number == 10
+				result << {station: index, ticket: :ship}
 			end
 		end
-		
-		return stations.sort {|a, b| a.number <=> b.number}
-		
-	end
-	
-	def connections_between(station_a_number, station_b_number)
-		
-		connections = []
-		self.connections.each do |connection|
-			if ((connection.station_a.number == station_a_number) and (connection.station_b.number == station_b_number)) or ((connection.station_a.number == station_b_number) and (connection.station_b.number == station_a_number))
-					connections << connection
-			end
-		end
-		
-		return connections
-		
+		result
 	end
 	
 end
-
