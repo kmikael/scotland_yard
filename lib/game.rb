@@ -2,125 +2,88 @@
 require 'board'
 require 'figure'
 
-# The class game fully describes 'Scotland Yard'
-# -- The board, Mr. X and the agents
-# All attributes are private
-# There are higher-level methods that change the state of the game
+# The class Game fully describes Scotland Yard:
+# The board, Mr. X and the agents.
+# There are higher-level methods that change the state of the game.
 
 class Game
- 
-	attr_reader :figures, :board, :mrx_log
-	attr_accessor :turns
-	# private :figures, :board, :turns
 	
-	# Initialization creates a board the figures
+	attr_accessor :board, :figures, :turns, :mrx_log, :agents_log
+	
+	# Initialization creates a board and the figures
 	# Then the figures are put on random starting positions
-	# The agents have 24 turns to catch Mr. X
-	
-	def initialize(number_of_stations = 199, csv_file_name = 'london.txt', number_of_agents = 4)
-		
-		@board = Board.new(number_of_stations, csv_file_name)
-		
-		# starting = [1, 5, 8, 3]
-		# @figures = [Figure.new(0, @board.stations[starting.sample])]
-		# starting.delete(@figures.last.position.number)
-		# for i in 1..number_of_agents
-		# 	@figures << Figure.new(i, @board.stations[starting.sample])
-		# 	starting.delete(@figures.last.position.number)
-		# end
-		
-		@mrx_log = []
-		
-		@turns = 0
-		
-		# Just for testing
-		@figures = []
-		if number_of_agents == 2
-			@figures << Figure.new(0, @board.stations[1])
-			@figures << Figure.new(1, @board.stations[5])
-			@figures << Figure.new(2, @board.stations[8])
+	def initialize(number_of_agents = 4)
+		@board = Board.new
+		start = [111, 56, 84, 37, 159, 23]
+		@figures = [Figure.new(0, start.sample)]
+		start.delete(@figures.last.position)
+		for i in 1..number_of_agents
+			@figures << Figure.new(i, start.sample)
+			start.delete(@figures.last.position)
 		end
-		
+		@turns = 0
+		@mrx_log = []
+		@agents_log = []
 	end
 	
 	# Is the game over?
-	# There are two possibilities
+	# There are two possibilities:
 	# - Mr. X and an agent are at the same station (=> The agents win)
-	# - 24 turns have passed (=> Mr. X has won)
-	
+	# - 20 turns have passed (=> Mr. X has won)
 	def over?
-	
-		for i in 1..(self.figures.length - 1)
-			if self.figures[0].position == self.figures[i].position
+		for i in 1..(@figures.length - 1)
+			if @figures[0].position == @figures[i].position
+				# puts 'An agent is on the same station as Mr. X: Game Over'
 				return true
 			end
 		end
-		
-		if self.turns == 24
+		if @turns >= 20
+			# puts '20 turns have passed: Game Over'
 			return true
 		end
-		
 		return false
-	
 	end
 	
+	# Returns the position of Mr. X at the 3., 8., 13., 18. and 23. turn.
+	# Returns 0 otherwise.
 	def position_of_mr_x
-		
-		if self.turns % 5 == 3
-			return self.figures[0].position.number
+		if @turns % 5 == 3
+			return @figures[0].position
 		end
-		
-		return nil
-		
+		return 0
 	end
 	
-	def position_of_agents
-		
+	# Returns of array of the positions of the agents.
+	def positions_of_agents
 		positions = []
-		for i in 1..4
-			positions << self.figures[i].position.number
-		end
-		
-		return positions
-		
+		@figures.each {|figure| positions << figure.position}
+		positions.shift
+		positions
 	end
 	
-	def move(figure_symbol, to_station_number, with_ticket)
-		
-		figure = nil
-		if (figure_symbol == :mr_x) or (figure_symbol == :mrx)
-			figure = self.figures[0]
-		elsif figure_symbol.to_s =~ /agent/
-			figure = self.figures[figure_symbol.to_s.reverse.to_i]
-		else
-			puts "There is no such figure"
-			return false
-		end
-		
-		connection = nil
-		self.board.connections_between(figure.position.number, to_station_number).each do |con|
-			if (con.kind == with_ticket) or (with_ticket == :black)
-				connection = con
-			end
-		end
-		
-		if connection.nil?
-			puts "#{figure.id == 0 ? "Mr. X" : "Agent"} can't move to station #{to_station_number} with a #{with_ticket.to_s}-ticket"
-			return false
-		end
-		
-		black_ticket = (with_ticket == :black)
-		
-		has_moved = figure.move(connection, black_ticket)
-		
-		if has_moved and figure.id == 0
-			self.mrx_log << with_ticket
-			self.turns += 1
-		end
-		
-		return has_moved
-		
+	def possible_routes_for(figure)
+		routes = @board.routes_from(figure.position)
+		routes.delete_if {|route| figure.tickets[route[:ticket]] == 0}
+		routes
 	end
-
+	
+	def move(figure_id, station, ticket)
+		figure = @figures[figure_id]
+		if positions_of_agents.include?(station) and figure.position > 0
+			# puts 'Agent can\'t move here because station is occupied'
+			return false
+		end
+		routes = possible_routes_for(figure)
+		if routes.include?({station: station, ticket: ticket}) or ticket == :black
+			figure.tickets[ticket] -= 1
+			figure.position = station
+			if figure.id == 0
+				@turns += 1
+				@mrx_log << position_of_mr_x
+			end
+			return true
+		end
+		return false
+	end
+	
 end
-

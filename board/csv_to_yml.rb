@@ -4,7 +4,7 @@ require 'yaml'
 
 require 'matrix'
 
-csv_file_name = 'london.txt'
+csv_file_name = 'board_csv.txt'
 
 ################################################################################
 

@@ -1,88 +1,55 @@
 
 require 'test/unit'
-
 require 'game'
 
 class TestGame < Test::Unit::TestCase
 	
 	def setup
-		
-		# Create new game with a test board and 2 agents
-		
-		@game = Game.new(8, '/Users/mkonutgan/Code/Ruby/scotland_yard/test/a_test_board.txt', 2)
-		
+		@game = Game.new
+		@game.figures[0].position = 56
+		@game.figures[1].position = 84
+		@game.figures[2].position = 37
+		@game.figures[3].position = 23
+		@game.figures[4].position = 111
 	end
 	
-	def test_new_game
-		
-		 # Test values of game
-		
-		assert_equal(3, @game.figures.length)
-		assert_equal(0, @game.figures[0].id)
-		assert_equal(1, @game.figures[1].id)
-		assert_equal(2, @game.figures[2].id)
-		assert_equal(nil, @game.figures[3])
-		
-		assert_equal(0, @game.turns)
-		
-		assert_equal(9, @game.board.stations.length)
-		
-		assert_equal(12, @game.board.connections.length)
-		
+	def test_initial_setup
+		assert_equal 5, @game.figures.length
+		@game.figures.each do |figure|
+			assert [111, 56, 84, 37, 159, 23].include?(figure.position)
+		end
+		assert_equal 0, @game.turns
+		assert_equal [], @game.mrx_log
+		assert_equal [], @game.agents_log
 	end
 	
-	def test_move
-		
-		# Test moving Mr. X arround
-		
-		@game.move(:mr_x, 4, :bus)
-		assert_equal(4, @game.figures[0].position.number)
-		@game.move(:mr_x, 6, :black)
-		assert_equal(6, @game.figures[0].position.number)
-		@game.move(:mr_x, 3, :taxi)
-		assert_equal(3, @game.figures[0].position.number)
-		@game.move(:mr_x, 7, :bus)
-		assert_equal(7, @game.figures[0].position.number)
-		
-		assert_equal(4, @game.turns)
-		
-		# Test moving the agents arround
-		
-		@game.move(:agent1, 6, :taxi)
-		@game.move(:agent1, 4, :underground)
-		@game.move(:agent1, 1, :bus)
-		assert_equal(1, @game.figures[1].position.number)
-		
-		@game.move(:agent2, 6, :taxi)
-		@game.move(:agent2, 5, :taxi)
-		assert_equal(5, @game.figures[2].position.number)
-		
+	def test_moving
+		assert @game.move(0, 91, :taxi)
+		assert_equal 91, @game.figures[0].position
+		assert_equal 98, @game.figures[0].tickets[:taxi]
+		refute @game.move(0, 1, :taxi)
+		assert_equal 1, @game.turns
+		assert_equal [0], @game.mrx_log
+	end
+	
+	def test_moving_agent_on_agent
+		@game.figures[1].position = 22
+		@game.figures[2].position = 34
+		refute @game.move(2, 22, :bus)
 	end
 	
 	def test_game_over_with_turns
-		
-		# Test if game.over? is true when there aren't any turns left
-		
-		@game.turns = 23
-		assert_equal(23, @game.turns)
-		@game.move(:mr_x, 7, :taxi)
-		assert_equal(24, @game.turns)
-		assert_equal(true, @game.over?)
-		
+		@game.turns = 19
+		assert @game.move(0, 42, :taxi)
+		assert_equal 20, @game.turns
+		assert @game.over?
 	end
 	
-	def test_game_over_with_caught_1
-		
-		# Test if game.over? is true when an Mr. X and an agent or at the same station 
-		
-		@game.move(:agent2, 6, :taxi)
-		@game.move(:agent2, 4, :underground)
-		@game.move(:agent2, 1, :bus)
-		assert_equal(1, @game.figures[0].position.number)
-		assert_equal(1, @game.figures[2].position.number)
-		assert_equal(true, @game.over?)
-		
+	def test_game_over_because_caught
+		@game.figures[0].position = 77
+		@game.figures[1].position = 94
+		assert @game.move(1, 77, :bus)
+		assert @game.over?
 	end
 	
 end
-

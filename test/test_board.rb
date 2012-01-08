@@ -1,6 +1,5 @@
 
 require 'test/unit'
-
 require 'board.rb'
 
 class TestBoard < Test::Unit::TestCase
@@ -14,7 +13,7 @@ class TestBoard < Test::Unit::TestCase
 		assert @board.can_move_between?(29, 41, :bus)
 		assert @board.can_move_between?(89, 128, :underground)
 		assert @board.can_move_between?(111, 112, :taxi)
-		assert @board.can_move_between?(115, 157, :ship)
+		assert @board.can_move_between?(115, 157, :black)
 		assert @board.can_move_between?(184, 196, :taxi)
 		assert @board.can_move_between?(3, 12, :taxi)
 	end
