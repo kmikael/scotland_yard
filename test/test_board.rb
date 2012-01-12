@@ -8,16 +8,6 @@ class TestBoard < Test::Unit::TestCase
 		@board = Board.new
 	end
 	
-	def test_moving
-		assert @board.can_move_between?(10, 11, :taxi)
-		assert @board.can_move_between?(29, 41, :bus)
-		assert @board.can_move_between?(89, 128, :underground)
-		assert @board.can_move_between?(111, 112, :taxi)
-		assert @board.can_move_between?(115, 157, :black)
-		assert @board.can_move_between?(184, 196, :taxi)
-		assert @board.can_move_between?(3, 12, :taxi)
-	end
-	
 	def test_routes
 		test_hash_1 = [
 			{station: 141, ticket: :taxi},

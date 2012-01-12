@@ -14,19 +14,6 @@ class Board
 		@board = YAML.load_file('board/board.yml')
 	end
 	
-	# Checks if one can move from [a] to [b] with a [ticket]-ticket
-	def can_move_between?(a, b, ticket)
-		if ticket == :taxi
-			@board[a][b] == 1 or @board[a][b] == 3
-		elsif ticket == :bus
-			@board[a][b] == 2 or @board[a][b] == 3 or @board[a][b] == 6
-		elsif ticket == :underground
-			@board[a][b] == 4 or @board[a][b] == 6
-		elsif ticket == :black
-			@board[a][b] == 10
-		end
-	end
-	
 	# Returns an array of all possible routes one can move to from station [station_number].
 	def routes_from(station_number)
 		result = []

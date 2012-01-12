@@ -8,22 +8,19 @@ require 'figure'
 
 class Game
 	
-	attr_accessor :board, :figures, :turns, :mrx_log, :agents_log
+	attr_accessor :board, :figures, :turns, :mrx_log
 	
 	# Initialization creates a board and the figures
 	# Then the figures are put on random starting positions
-	def initialize(number_of_agents = 4)
+	def initialize
 		@board = Board.new
-		start = [111, 56, 84, 37, 159, 23]
-		@figures = [Figure.new(0, start.sample)]
-		start.delete(@figures.last.position)
-		for i in 1..number_of_agents
-			@figures << Figure.new(i, start.sample)
-			start.delete(@figures.last.position)
+		start = [13, 26, 29, 34, 50, 53, 91, 94, 103, 112, 117, 132, 138, 141, 155, 174, 197, 198].shuffle
+		@figures = []
+		for i in 0..4
+			@figures << Figure.new(i, start.pop)
 		end
-		@turns = 0
+		@turns = 1
 		@mrx_log = []
-		@agents_log = []
 	end
 	
 	# Is the game over?
@@ -31,29 +28,29 @@ class Game
 	# - Mr. X and an agent are at the same station (=> The agents win)
 	# - 20 turns have passed (=> Mr. X has won)
 	def over?
-		for i in 1..(@figures.length - 1)
+		for i in 1..4
 			if @figures[0].position == @figures[i].position
-				# puts 'An agent is on the same station as Mr. X: Game Over'
+				puts "GAME OVER: Mr. X was caught."
 				return true
 			end
 		end
-		if @turns >= 20
-			# puts '20 turns have passed: Game Over'
+		if @turns > 20
+			puts "GAME OVER: 20 turns have passed"
 			return true
 		end
 		return false
 	end
 	
-	# Returns the position of Mr. X at the 3., 8., 13., 18. and 23. turn.
-	# Returns 0 otherwise.
-	def position_of_mr_x
+	# Returns the position of Mr. X at the 3., 8., 13., 18. and 23. turn or 0.
+	def position_of_mrx
 		if @turns % 5 == 3
-			return @figures[0].position
+			@figures[0].position
+		else
+			0
 		end
-		return 0
 	end
 	
-	# Returns of array of the positions of the agents.
+	# Returns an array of the positions of the agents.
 	def positions_of_agents
 		positions = []
 		@figures.each {|figure| positions << figure.position}
@@ -63,27 +60,34 @@ class Game
 	
 	def possible_routes_for(figure)
 		routes = @board.routes_from(figure.position)
-		routes.delete_if {|route| figure.tickets[route[:ticket]] == 0}
+		routes.delete_if {|r| figure.tickets[r[:ticket]] == 0}
+		if figure.id > 0
+			routes.delete_if {|r| positions_of_agents.include?(r[:station])}
+		end
 		routes
 	end
 	
 	def move(figure_id, station, ticket)
 		figure = @figures[figure_id]
-		if positions_of_agents.include?(station) and figure.position > 0
-			# puts 'Agent can\'t move here because station is occupied'
-			return false
-		end
 		routes = possible_routes_for(figure)
 		if routes.include?({station: station, ticket: ticket}) or ticket == :black
+			if figure.id == 0
+				puts "\nTURN #{@turns}:"
+				@turns += 1
+				@mrx_log << ticket
+			end
+			figure_name = figure.id == 0 ? "Mr. X" : "Agent #{figure.id}"
+			puts "#{figure_name} moves from #{figure.position} to #{station} by #{ticket}"
 			figure.tickets[ticket] -= 1
 			figure.position = station
-			if figure.id == 0
-				@turns += 1
-				@mrx_log << position_of_mr_x
-			end
 			return true
 		end
+		puts "Could not move."
 		return false
+	end
+	
+	def gamestate(figure_id)
+		possible_routes_for(@figures[figure_id])
 	end
 	
 end

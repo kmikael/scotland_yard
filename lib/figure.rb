@@ -11,7 +11,7 @@ class Figure
 		@id = id
 		@position = position
 		if id > 0
-			@tickets = {taxi: 10, bus: 8, underground: 4}
+			@tickets = {taxi: 10, bus: 8, underground: 4, black: 0}
 		else
 			@tickets = {taxi: 99, bus: 99, underground: 99, black: 4}
 		end

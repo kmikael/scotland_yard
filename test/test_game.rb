@@ -39,9 +39,9 @@ class TestGame < Test::Unit::TestCase
 	end
 	
 	def test_game_over_with_turns
-		@game.turns = 19
+		@game.turns = 20
 		assert @game.move(0, 42, :taxi)
-		assert_equal 20, @game.turns
+		assert_equal 21, @game.turns
 		assert @game.over?
 	end
 	
