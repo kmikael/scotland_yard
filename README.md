@@ -5,7 +5,8 @@ This is a command-line model of the board game Scotland Yard written in Ruby. I 
 ## Usage
 
 To start the program go to the top level folder of the program and use
-
-	ruby -I lib lib/controller.rb
+	
+	cd path/to/scotland_yard
+	ruby -I lib bin/scotland_yard
 
 Then watch the virtual Mr. X and the virtual agents play a game where everyone just plays randomly.
