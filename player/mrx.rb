@@ -1,8 +1,8 @@
 
 class MrXPlayer
-	
-	def play(gamestate)
-		gamestate.sample
-	end
-	
+  
+  def play(gamestate)
+    gamestate[:routes].sample
+  end
+  
 end

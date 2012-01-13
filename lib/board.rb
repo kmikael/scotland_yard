@@ -8,36 +8,38 @@ require 'yaml'
 # will be 1 + 2 = 3.
 
 class Board
-	
-	# Load the array of arrays (matrix) from a yaml-file.
-	def initialize
-		@board = YAML.load_file('board/board.yml')
-	end
-	
-	# Returns an array of all possible routes one can move to from station [station_number].
-	def routes_from(station_number)
-		result = []
-		@board[station_number].each_with_index do |number, index|
-			if index == 0 or index == station_number
-				next
-			end
-			if number == 1
-				result << {station: index, ticket: :taxi}
-			elsif number == 2
-				result << {station: index, ticket: :bus}
-			elsif number == 3
-				result << {station: index, ticket: :taxi}
-				result << {station: index, ticket: :bus}
-			elsif number == 4
-				result << {station: index, ticket: :underground}
-			elsif number == 6
-				result << {station: index, ticket: :bus}
-				result << {station: index, ticket: :underground}
-			elsif number == 10
-				result << {station: index, ticket: :black}
-			end
-		end
-		result
-	end
-	
+  
+  attr_accessor :matrix
+  
+  # Load the array of arrays (matrix) from a yaml-file.
+  def initialize
+    @matrix = YAML.load_file('board/board.yml')
+  end
+  
+  # Returns an array of all possible routes one can move to from station [station_number].
+  def routes_from(station_number)
+    result = []
+    @matrix[station_number].each_with_index do |number, index|
+      if index == 0 or index == station_number
+        next
+      end
+      if number == 1
+        result << {station: index, ticket: :taxi}
+      elsif number == 2
+        result << {station: index, ticket: :bus}
+      elsif number == 3
+        result << {station: index, ticket: :taxi}
+        result << {station: index, ticket: :bus}
+      elsif number == 4
+        result << {station: index, ticket: :underground}
+      elsif number == 6
+        result << {station: index, ticket: :bus}
+        result << {station: index, ticket: :underground}
+      elsif number == 10
+        result << {station: index, ticket: :black}
+      end
+    end
+    result
+  end
+  
 end
