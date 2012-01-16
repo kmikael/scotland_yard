@@ -1,7 +1,7 @@
 
 require 'game'
-require_relative '../player/mrx.rb'
-require_relative '../player/agent.rb'
+require 'mrx'
+require 'agent'
 
 class Controller
 
