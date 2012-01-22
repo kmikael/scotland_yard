@@ -42,6 +42,7 @@ class Game
       if @figures[0].position == @figures[i].position
         log "**GAME OVER:** Mr. X was caught."
         @logger.save
+        puts "Mr.X was caught"
         puts "Game over"
         return true
       end
@@ -111,6 +112,8 @@ class Game
     {
       routes: possible_routes_for(@figures[figure_id]),
       board: @board.matrix,
+      useless: @board,
+      distance_matrix: @board.distance_matrix,
       position_of_mrx: position_of_mrx,
       positions_of_agents: positions_of_agents,
       turns: @turns,
