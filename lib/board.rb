@@ -15,7 +15,7 @@ class Board
   # Load the array of arrays (matrix) from a yaml-file.
   def initialize
     @matrix = YAML.load_file('yml/board-matrix.yml')
-    @distance_matrix = YAML.load_file('yml/distance-matrix.yml')
+    @distance_matrix = YAML.load_file('yml/distance-table.yml')
   end
   
   # Returns an array of all possible routes one can move to from station [station_number].
@@ -64,7 +64,7 @@ class Board
         min = avg
       end
     end
-    h_stations[index]
+    h_stations[best]
     end
   
 end
