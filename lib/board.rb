@@ -44,14 +44,15 @@ class Board
     result
   end
 
+  # returns distance between two stations
   def distance(station1, station2)
     @distance_matrix[station1][station2]
   end
 
+  # should return the move with 
   def min_avg_distance(h_stations, st_agents)
-    min = 15
-    avg = 15
-    best = 12
+    max = 0
+    best = 12 # random number
     h_stations.each_with_index do |st, index|
       sta = st[:station]
       avg = 0
@@ -59,9 +60,9 @@ class Board
         avg += distance(sta, ag)
       end
       avg = avg/4
-      if avg < min
+      if avg > max
         best = index
-        min = avg
+        max = avg
       end
     end
     h_stations[best]
