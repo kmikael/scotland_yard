@@ -44,12 +44,12 @@ class Board
     result
   end
 
-  # returns distance between two stations
+  # Returns distance between two stations
   def distance(station1, station2)
     @distance_matrix[station1][station2]
   end
 
-  # should return the move with the largest avg distance
+  # Should return the move with the largest avarage distance
   def max_avg_distance(h_stations, st_agents)
     max = 0
     best = 12 # random number
@@ -75,6 +75,6 @@ class Board
       end
     end
     h_stations[best]
-    end
-  
+  end
+
 end

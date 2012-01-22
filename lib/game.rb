@@ -50,6 +50,7 @@ class Game
     if @turns > 20
       log "**GAME OVER:** 20 turns have passed"
       @logger.save
+      puts "20 turns are up"
       puts "Game over"
       return true
     end

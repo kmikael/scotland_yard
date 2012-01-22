@@ -6,9 +6,9 @@ class MrXPlayer
   end
 
   def play(gamestate)
-    #  gamestate[:routes].sample
+    #For a random move: gamestate[:routes].sample
     move = what_move(gamestate)
-    
+    move
   end
   
 end
