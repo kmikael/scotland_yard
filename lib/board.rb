@@ -10,10 +10,12 @@ require 'yaml'
 class Board
   
   attr_accessor :matrix
+  attr_accessor :distance_matrix
   
   # Load the array of arrays (matrix) from a yaml-file.
   def initialize
     @matrix = YAML.load_file('yml/board-matrix.yml')
+    @distance_matrix = YAML.load_file('yml/distance-matrix.yml')
   end
   
   # Returns an array of all possible routes one can move to from station [station_number].
@@ -41,5 +43,28 @@ class Board
     end
     result
   end
+
+  def distance(station1, station2)
+    @distance_matrix[station1][station2]
+  end
+
+  def min_avg_distance(h_stations, st_agents)
+    min = 15
+    avg = 15
+    best = 12
+    h_stations.each_with_index do |st, index|
+      sta = st[:station]
+      avg = 0
+      st_agents.each do |ag|
+        avg += distance(sta, ag)
+      end
+      avg = avg/4
+      if avg < min
+        best = index
+        min = avg
+      end
+    end
+    h_stations[index]
+    end
   
 end

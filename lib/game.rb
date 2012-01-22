@@ -111,6 +111,8 @@ class Game
     {
       routes: possible_routes_for(@figures[figure_id]),
       board: @board.matrix,
+      useless: @board,
+      distance_matrix: @board.distance_matrix,
       position_of_mrx: position_of_mrx,
       positions_of_agents: positions_of_agents,
       turns: @turns,
