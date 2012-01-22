@@ -42,6 +42,7 @@ class Game
       if @figures[0].position == @figures[i].position
         log "**GAME OVER:** Mr. X was caught."
         @logger.save
+        puts "Mr.X was caught"
         puts "Game over"
         return true
       end
