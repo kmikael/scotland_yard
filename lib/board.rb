@@ -49,15 +49,24 @@ class Board
     @distance_matrix[station1][station2]
   end
 
-  # should return the move with 
-  def min_avg_distance(h_stations, st_agents)
+  # should return the move with the largest avg distance
+  def max_avg_distance(h_stations, st_agents)
     max = 0
     best = 12 # random number
     h_stations.each_with_index do |st, index|
       sta = st[:station]
       avg = 0
       st_agents.each do |ag|
-        avg += distance(sta, ag)
+        dis = distance(sta,ag)
+        if ag == sta or dis == 1 # there should be a better way to do that
+          avg = 1
+          break
+        elsif dis > 5 # large distances are not important
+          dis = 4
+          avg += dis
+        else
+          avg += dis
+        end
       end
       avg = avg/4
       if avg > max
