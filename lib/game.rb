@@ -23,7 +23,7 @@ class Game
     for i in 0..4
       @figures << Figure.new(i, start.pop)
     end
-    @turns = 1
+    @turns = 0
     @mrx_last_used_ticket = nil
     @logger = Logger.new
     log "# SCOTLAND YARD: MR. X VS. 4 AGENTS"
@@ -47,7 +47,7 @@ class Game
         return true
       end
     end
-    if @turns > 20
+    if @turns > 19
       log "**GAME OVER:** 20 turns have passed"
       @logger.save
       puts "20 turns are up"
@@ -95,7 +95,7 @@ class Game
     routes = possible_routes_for(figure)
     if routes.include?({station: station, ticket: ticket}) or ticket == :black
       if figure.id == 0
-        log "\n## TURN #{@turns}:"
+        log "\n## TURN #{@turns + 1}:"
         @turns += 1
         @mrx_last_used_ticket = ticket
       end
@@ -111,9 +111,9 @@ class Game
   # Describes the current gamstate.
   def gamestate(figure_id)
     {
+      figure_id: figure_id,
       routes: possible_routes_for(@figures[figure_id]),
-      board: @board.matrix,
-      useless: @board,
+      board: @board,
       distance_matrix: @board.distance_matrix,
       position_of_mrx: position_of_mrx,
       positions_of_agents: positions_of_agents,
