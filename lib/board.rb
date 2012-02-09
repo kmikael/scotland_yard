@@ -22,7 +22,7 @@ class Board
   def routes_from(station_number)
     result = []
     @matrix[station_number].each_with_index do |number, index|
-      if index == 0 or index == station_number
+      if number == 0
         next
       end
       if number == 1
