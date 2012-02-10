@@ -13,7 +13,6 @@ class AgentPlayer
     # play_greedy(gamestate)
   end
   
-  # TODO: Fix bug that sometimes causes this method to loop endlessly
   def calculate_possible_positions_mrx(gamestate, possible_positions_mrx)
     if gamestate[:position_of_mrx] != 0
       possible_positions_mrx = [gamestate[:position_of_mrx]]
