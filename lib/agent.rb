@@ -5,57 +5,54 @@ class AgentPlayer
     @@possible_positions_mrx = []
   end
   
+  # play gets called by the controller once per turn
   def play(gamestate)
     if gamestate[:figure_id] == 1
-      @@possible_positions_mrx = calculate_possible_positions_mrx(gamestate, @@possible_positions_mrx)
+      calculate_possible_positions_mrx(gamestate[:position_of_mrx], gamestate[:mrx_last_used_ticket], gamestate[:board])
     end
-    gamestate[:routes].sample
-    # play_greedy(gamestate)
+    play_greedy(gamestate[:routes], gamestate[:board])
   end
   
-  def calculate_possible_positions_mrx(gamestate, possible_positions_mrx)
-    if gamestate[:position_of_mrx] != 0
-      possible_positions_mrx = [gamestate[:position_of_mrx]]
-    else
+  # Play to a random station
+  def play_random(routes)
+    routes.sample
+  end
+  
+  def play_greedy(routes, board)
+    return nil if routes.empty?
+    return play_random(routes) if @@possible_positions_mrx.empty?
+    min_average_distance_to_mrx = 10
+    route_to_go_to = 0
+    routes.each_with_index do |route, index|
+      my_position = route[:station]
+      sum_of_distances_to_mrx = 0
+      @@possible_positions_mrx.each do |position_of_mrx|
+        current_distance_to_mrx = board.distance(my_position, position_of_mrx)
+        sum_of_distances_to_mrx += current_distance_to_mrx
+      end
+      current_avgerage_distance_to_mrx = sum_of_distances_to_mrx / @@possible_positions_mrx.length
+      if current_avgerage_distance_to_mrx < min_average_distance_to_mrx
+        min_average_distance_to_mrx = current_avgerage_distance_to_mrx
+        route_to_go_to = index
+      end
+    end
+    return routes[route_to_go_to]
+  end
+  
+  def calculate_possible_positions_mrx(position_of_mrx, mrx_last_used_ticket, board)
+    if position_of_mrx == 0
       new_positions = []
-      ticket = gamestate[:mrx_last_used_ticket]
-      board = gamestate[:board]
-      possible_positions_mrx.each do |p|
+      @@possible_positions_mrx.each do |p|
         board.routes_from(p).each do |q|
-          if q[:ticket] == ticket
-            unless new_positions.include?(q[:station])
-              new_positions << q[:station]
-            end
+          if q[:ticket] == mrx_last_used_ticket and not new_positions.include?(q[:station])
+            new_positions << q[:station]
           end
         end
       end
-      possible_positions_mrx = new_positions.sort
+      @@possible_positions_mrx = new_positions.sort
+    else
+      @@possible_positions_mrx = [position_of_mrx]  
     end
-    return possible_positions_mrx
-  end
-  
-  def play_greedy(gamestate)
-    if gamestate[:turns] < 3
-      return gamestate[:routes].sample
-    end
-    minimal_distance = 100
-    minimal_distance_index = 0
-    min_avg = 100
-    min_avg_index = 0
-    return nil if (gamestate[:routes] == [])
-    
-    gamestate[:routes].each_with_index do |r, i|
-      avg = 0
-      @@possible_positions_mrx.each do |p|
-        avg += gamestate[:board].distance(r[:station], p)
-      end
-      avg = avg / @@possible_positions_mrx.length
-      if avg < min_avg
-        min_avg = avg
-        min_avg_index = i
-      end
-    end
-    return gamestate[:routes][min_avg_index]
   end
   
 end
