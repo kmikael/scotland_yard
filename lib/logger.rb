@@ -1,12 +1,10 @@
 
 class Logger
-	
-	attr_accessor :contents
   
   def initialize(filename = 'log.md')
+    @filename = filename
     @contents = "*Date: #{Time.now}*\n"
     @contents << "----------------------------------------\n"
-    @filename = filename
   end
   
   def log(message)
