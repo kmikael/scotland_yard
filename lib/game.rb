@@ -9,15 +9,12 @@ require 'logger'
 
 class Game
   
-  attr_accessor :board, :figures, :turns, :mrx_log
-  
   # Initialization creates a board and the figures
   # Then the figures are put on random starting positions
   def initialize
     puts "Starting game"
-    puts "Loading board-matrix..."
+    puts "Loading board..."
     @board = Board.new
-    puts "Board-matrix loaded"
     start = [13, 26, 29, 34, 50, 53, 91, 94, 103, 112, 117, 132, 138, 141, 155, 174, 197, 198].shuffle
     @figures = []
     for i in 0..4
@@ -26,7 +23,7 @@ class Game
     @turns = 0
     @mrx_last_used_ticket = nil
     @logger = Logger.new
-    log "# SCOTLAND YARD: MR. X VS. 4 AGENTS"
+    log "## SCOTLAND YARD: MR. X VS. 4 AGENTS"
   end
   
   def log(msg)
@@ -40,18 +37,16 @@ class Game
   def over?
     for i in 1..4
       if @figures[0].position == @figures[i].position
-        log "**GAME OVER:** Mr. X was caught."
+        log "**GAME OVER:** Mr. X was caught - The agents win."
         @logger.save
-        puts "Mr.X was caught"
-        puts "Game over"
+        puts "Game Over: The agents win"
         return true
       end
     end
     if @turns > 19
-      log "**GAME OVER:** 20 turns have passed"
+      log "**GAME OVER:** 20 turns have passed - Mr. X wins."
       @logger.save
-      puts "20 turns are up"
-      puts "Game over"
+      puts "Game Over: Mr. X wins"
       return true
     end
     return false
@@ -95,7 +90,7 @@ class Game
     routes = possible_routes_for(figure)
     if routes.include?({station: station, ticket: ticket}) or ticket == :black
       if figure.id == 0
-        log "\n## TURN #{@turns + 1}:"
+        log "\n### TURN #{@turns + 1}:"
         @turns += 1
         @mrx_last_used_ticket = ticket
       end
@@ -108,13 +103,12 @@ class Game
     return false
   end
   
-  # Describes the current gamstate.
+  # Describes the current gamstate
   def gamestate(figure_id)
     {
       figure_id: figure_id,
       routes: possible_routes_for(@figures[figure_id]),
       board: @board,
-      distance_matrix: @board.distance_matrix,
       position_of_mrx: position_of_mrx,
       positions_of_agents: positions_of_agents,
       turns: @turns,
